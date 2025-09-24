@@ -32,6 +32,7 @@ const AddNote = () => {
             name="title"
             value={note.title}
             onChange={onChange}
+            minLength={1} required
           />
         </div>
 
@@ -46,6 +47,7 @@ const AddNote = () => {
             name="description"
             value={note.description}
             onChange={onChange}
+            minLength={1} required
           />
         </div>
 
@@ -60,10 +62,11 @@ const AddNote = () => {
             name="tag"
             value={note.tag}
             onChange={onChange}
+            minLength={1} required
           />
         </div>
 
-        <button type="submit" className="btn btn-primary" onClick={handleClick}>
+        <button disabled={note.title.length<2 || note.description.length<2 || note.tag.length<2} type="submit" className="btn btn-primary" onClick={handleClick}>
           Add Note
         </button>
       </form>

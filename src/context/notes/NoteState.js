@@ -18,7 +18,6 @@ const NoteState = (props) => {
     });
 
     const json = await response.json();
-    console.log("Fetched Notes:", json);
     setNotes(json);
   };
 
@@ -35,8 +34,6 @@ const NoteState = (props) => {
     });
 
     const json = await response.json();
-    console.log("Added Note:", json);
-
     setNotes(notes.concat(json));
   };
 
@@ -67,7 +64,7 @@ const NoteState = (props) => {
     });
 
     const json = await response.json();
-    console.log("Updated Note:", json);
+   
 
     setNotes(
       notes.map((note) =>
