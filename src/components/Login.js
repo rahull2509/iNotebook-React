@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const Login = () => {
+const Login = (props) => {
   const [credentials, setCredentials] = useState({ email: "", password: "" });
   const navigate = useNavigate();
 
@@ -14,23 +14,24 @@ const Login = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(credentials), // sending data
+        body: JSON.stringify(credentials),
       });
 
       const json = await response.json();
       console.log(json);
 
       if (json.success) {
-        // Save token to localStorage
         localStorage.setItem("token", json.authtoken);
 
-        // Redirect to homepage/dashboard
+        props.showAlert("Logged in successfully", "success");
+
         navigate("/");
       } else {
-        alert("Invalid credentials, please try again.");
+        props.showAlert("Invalid credentials, please try again", "danger");
       }
     } catch (error) {
       console.error("Error:", error);
+      props.showAlert("Something went wrong. Please try again later.", "danger");
     }
   };
 
@@ -39,8 +40,10 @@ const Login = () => {
   };
 
   return (
-    <div>
+    <div className="container my-3">
+      <h2>Login to continue to iNotebook</h2>
       <form onSubmit={handleSubmit}>
+        {/* Email */}
         <div className="mb-3">
           <label htmlFor="email" className="form-label">
             Email address
@@ -52,12 +55,14 @@ const Login = () => {
             id="email"
             value={credentials.email}
             onChange={onChange}
-            aria-describedby="emailHelp"
+            required
           />
           <div id="emailHelp" className="form-text">
             We'll never share your email with anyone else.
           </div>
         </div>
+
+        {/* Password */}
         <div className="mb-3">
           <label htmlFor="password" className="form-label">
             Password
@@ -69,10 +74,12 @@ const Login = () => {
             id="password"
             value={credentials.password}
             onChange={onChange}
+            required
           />
         </div>
+
         <button type="submit" className="btn btn-primary">
-          Submit
+          Login
         </button>
       </form>
     </div>

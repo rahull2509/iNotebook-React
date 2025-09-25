@@ -3,21 +3,27 @@ import NoteContext from "../context/notes/noteContext";
 import Noteitem from "./Noteitem";
 import AddNote from "./AddNote";
 
-export default function Notes() {
+export default function Notes(props) {
   const context = useContext(NoteContext);
   const { notes, getNotes, editNote } = context;
+
+  const ref = useRef(null);
+  const refClose = useRef(null);
+
+  const [note, setNote] = useState({
+    id: "",
+    etitle: "",
+    edescription: "",
+    etag: "",
+  });
+
 
   useEffect(() => {
     getNotes();
     // eslint-disable-next-line
   }, []);
 
-  const ref = useRef(null);
-  const refClose = useRef(null);
 
-  const [note, setNote] = useState({ id: "", etitle: "", edescription: "", etag: "" });
-
-  // open modal with selected note
   const updateNote = (currentNote) => {
     ref.current.click();
     setNote({
@@ -37,15 +43,14 @@ export default function Notes() {
   const handleClick = (e) => {
     e.preventDefault();
     editNote(note.id, note.etitle, note.edescription, note.etag);
-    refClose.current.click(); // close modal
+    refClose.current.click(); 
+    props.showAlert("Note updated successfully", "success");
   };
 
   return (
     <>
-      {/* Add Note Component */}
-      <AddNote />
+      <AddNote showAlert={props.showAlert} />
 
-      {/* Hidden Button for Modal Trigger */}
       <button
         type="button"
         className="btn btn-primary d-none"
@@ -56,8 +61,12 @@ export default function Notes() {
         Launch modal
       </button>
 
-      {/* Edit Note Modal */}
-      <div className="modal fade" id="editModal" tabIndex="-1" aria-hidden="true">
+      <div
+        className="modal fade"
+        id="editModal"
+        tabIndex="-1"
+        aria-hidden="true"
+      >
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
@@ -82,7 +91,8 @@ export default function Notes() {
                     name="etitle"
                     value={note.etitle}
                     onChange={onChange}
-                    minLength={4}required
+                    minLength={4}
+                    required
                   />
                 </div>
 
@@ -97,7 +107,8 @@ export default function Notes() {
                     name="edescription"
                     value={note.edescription}
                     onChange={onChange}
-                    minLength={5}required
+                    minLength={5}
+                    required
                   />
                 </div>
 
@@ -112,7 +123,8 @@ export default function Notes() {
                     name="etag"
                     value={note.etag}
                     onChange={onChange}
-                    minLength={1}required
+                    minLength={1}
+                    required
                   />
                 </div>
               </form>
@@ -126,7 +138,16 @@ export default function Notes() {
               >
                 Close
               </button>
-              <button disabled={note.etitle.length<4 || note.edescription.length<5 || note.etag.length<1} type="button" className="btn btn-primary" onClick={handleClick}>
+              <button
+                disabled={
+                  note.etitle.length < 4 ||
+                  note.edescription.length < 5 ||
+                  note.etag.length < 1
+                }
+                type="button"
+                className="btn btn-primary"
+                onClick={handleClick}
+              >
                 Update Note
               </button>
             </div>
@@ -134,14 +155,15 @@ export default function Notes() {
         </div>
       </div>
 
-      {/* Notes List */}
       <div className="row my-3">
-  <h2>Your Notes</h2>
-  {notes?.length === 0 && "No Notes to display"}
-  {notes?.map((note) => {
-    return <Noteitem key={note._id} updateNote={updateNote} note={note} />;
-  })}
-</div>
+        <h2>Your Notes</h2>
+        {notes?.length === 0 && "No Notes to display"}
+        {notes?.map((note) => {
+          return (
+            <Noteitem key={note._id} updateNote={updateNote} note={note} />
+          );
+        })}
+      </div>
     </>
   );
 }

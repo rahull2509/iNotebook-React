@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const Signup = () => {
+const Signup = (props) => {
   const [credentials, setCredentials] = useState({
     name: "",
     email: "",
@@ -20,7 +20,7 @@ const Signup = () => {
     const { name, email, password, cpassword } = credentials;
 
     if (password !== cpassword) {
-      alert("Passwords do not match!");
+      props.showAlert("Passwords do not match!", "danger");
       return;
     }
 
@@ -39,19 +39,22 @@ const Signup = () => {
       if (json.success) {
         // Save token & redirect
         localStorage.setItem("token", json.authtoken);
+        props.showAlert("Account created successfully", "success");
         navigate("/");
       } else {
-        alert(json.error || "Invalid details, please try again");
+        props.showAlert(json.error || "Invalid details, please try again", "danger");
       }
     } catch (error) {
       console.error("Error:", error);
+      props.showAlert("Something went wrong. Try again later.", "danger");
     }
   };
 
   return (
     <div className="container">
+      <h2 className="my-3">Create an account to use iNotebook</h2>
       <form onSubmit={handleSubmit}>
-        {/* Name */}
+
         <div className="mb-3">
           <label htmlFor="name" className="form-label">
             Name
@@ -68,7 +71,6 @@ const Signup = () => {
           />
         </div>
 
-        {/* Email */}
         <div className="mb-3">
           <label htmlFor="email" className="form-label">
             Email address
@@ -88,7 +90,6 @@ const Signup = () => {
           </div>
         </div>
 
-        {/* Password */}
         <div className="mb-3">
           <label htmlFor="password" className="form-label">
             Password
@@ -106,7 +107,6 @@ const Signup = () => {
           />
         </div>
 
-        {/* Confirm Password */}
         <div className="mb-3">
           <label htmlFor="cpassword" className="form-label">
             Confirm Password
@@ -124,7 +124,6 @@ const Signup = () => {
           />
         </div>
 
-        {/* Signup Button */}
         <button type="submit" className="btn btn-primary">
           Signup
         </button>

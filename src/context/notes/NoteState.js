@@ -6,71 +6,83 @@ const NoteState = (props) => {
   const notesInitial = [];
   const [notes, setNotes] = useState(notesInitial);
 
-  // Get all Notes
   const getNotes = async () => {
-    const response = await fetch(`${host}/api/notes/fetchallnotes`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "auth-token":
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjhjZWJlNDA4Y2MxZjY2ZjZmMDlmMmFkIn0sImlhdCI6MTc1ODQ3NDM5Nn0.Zq4nqjnTQA2wqHSjlCi3LjbcOk_nd6FG3PBAELrfzPE",
-      },
-    });
+    try {
+      const response = await fetch(`${host}/api/notes/fetchallnotes`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "auth-token": localStorage.getItem("token"),
+        },
+      });
 
-    const json = await response.json();
-    setNotes(json);
+      const json = await response.json();
+      setNotes(json);
+    } catch (error) {
+      console.error("Error fetching notes:", error.message);
+    }
   };
 
-  // Add a Note
+  
   const addNote = async (title, description, tag) => {
-    const response = await fetch(`${host}/api/notes/addnote`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "auth-token":
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjhjZWJlNDA4Y2MxZjY2ZjZmMDlmMmFkIn0sImlhdCI6MTc1ODQ3NDM5Nn0.Zq4nqjnTQA2wqHSjlCi3LjbcOk_nd6FG3PBAELrfzPE",
-      },
-      body: JSON.stringify({ title, description, tag }),
-    });
+    try {
+      const response = await fetch(`${host}/api/notes/addnote`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "auth-token": localStorage.getItem("token"),
+        },
+        body: JSON.stringify({ title, description, tag }),
+      });
 
-    const json = await response.json();
-    setNotes(notes.concat(json));
+      const note = await response.json();
+      setNotes(notes.concat(note)); 
+    } catch (error) {
+      console.error("Error adding note:", error.message);
+    }
   };
 
-  // Delete a Note
+  
   const deleteNote = async (id) => {
-    await fetch(`${host}/api/notes/deletenote/${id}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        "auth-token":
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjhjZWJlNDA4Y2MxZjY2ZjZmMDlmMmFkIn0sImlhdCI6MTc1ODQ3NDM5Nn0.Zq4nqjnTQA2wqHSjlCi3LjbcOk_nd6FG3PBAELrfzPE",
-      },
-    });
+    try {
+      await fetch(`${host}/api/notes/deletenote/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          "auth-token": localStorage.getItem("token"),
+        },
+      });
 
-    setNotes(notes.filter((note) => note._id !== id));
+      
+      setNotes(notes.filter((note) => note._id !== id));
+    } catch (error) {
+      console.error("Error deleting note:", error.message);
+    }
   };
 
-  // Edit a Note
+  
   const editNote = async (id, title, description, tag) => {
-    const response = await fetch(`${host}/api/notes/updatenote/${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        "auth-token":
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjhjZWJlNDA4Y2MxZjY2ZjZmMDlmMmFkIn0sImlhdCI6MTc1ODQ3NDM5Nn0.Zq4nqjnTQA2wqHSjlCi3LjbcOk_nd6FG3PBAELrfzPE",
-      },
-      body: JSON.stringify({ title, description, tag }),
-    });
+    try {
+      const response = await fetch(`${host}/api/notes/updatenote/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "auth-token": localStorage.getItem("token"),
+        },
+        body: JSON.stringify({ title, description, tag }),
+      });
 
-    const json = await response.json();
-   
+      await response.json(); 
 
-    setNotes(
-      notes.map((note) =>
-        note._id === id ? { ...note, title, description, tag } : note
-      )
-    );
+     
+      setNotes(
+        notes.map((note) =>
+          note._id === id ? { ...note, title, description, tag } : note
+        )
+      );
+    } catch (error) {
+      console.error("Error updating note:", error.message);
+    }
   };
 
   return (

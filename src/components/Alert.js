@@ -1,13 +1,22 @@
 import React from "react";
+import "../Alert.css";
 
-const Alert = (props) => {
+function capitalize(str) {
+  if (!str) return "";
+  if (str === "danger") {
+    str = "error";
+  }
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+function Alert(props) {
   return (
-    <div>
-      <div className="alert alert-primary" role="alert">
-        {props.message}
+    props.alert && (
+      <div className={`custom-alert ${props.alert.type}`}>
+        <strong>{capitalize(props.alert.type)}:</strong> {props.alert.msg}
       </div>
-    </div>
+    )
   );
-};
+}
 
 export default Alert;
