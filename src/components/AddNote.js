@@ -1,16 +1,17 @@
 import noteContext from "../context/notes/noteContext";
 import React, { useContext, useState } from "react";
 
-const AddNote = () => {
+const AddNote = (props) => {
   const context = useContext(noteContext);
   const { addNote } = context;
 
   const [note, setNote] = useState({ title: "", description: "", tag: "" });
 
   const handleClick = (e) => {
-    e.preventDefault(); // page reload hone se bachaata hai
+    e.preventDefault();
     addNote(note.title, note.description, note.tag);
-    setNote({ title: "", description: "", tag: "" }); // form reset
+    setNote({ title: "", description: "", tag: "" });
+    props.showAlert("Note added successfully", "success");
   };
 
   const onChange = (e) => {
@@ -21,6 +22,7 @@ const AddNote = () => {
     <div className="container my-3">
       <h2>Add a Note</h2>
       <form>
+        {/* Title */}
         <div className="mb-3">
           <label htmlFor="title" className="form-label">
             Title
@@ -32,25 +34,37 @@ const AddNote = () => {
             name="title"
             value={note.title}
             onChange={onChange}
-            minLength={1} required
+            required
           />
+          {note.title.length > 0 && note.title.length < 4 && (
+            <small className="text-danger">
+              Title must be at least 4 characters
+            </small>
+          )}
         </div>
 
+        {/* Description */}
         <div className="mb-3">
           <label htmlFor="description" className="form-label">
             Description
           </label>
-          <input
-            type="text"
+          <textarea
             className="form-control"
             id="description"
             name="description"
+            rows="4"
             value={note.description}
             onChange={onChange}
-            minLength={1} required
+            required
           />
+          {note.description.length > 0 && note.description.length < 5 && (
+            <small className="text-danger">
+              Description must be at least 5 characters
+            </small>
+          )}
         </div>
 
+        {/* Tag */}
         <div className="mb-3">
           <label htmlFor="tag" className="form-label">
             Tag
@@ -62,11 +76,24 @@ const AddNote = () => {
             name="tag"
             value={note.tag}
             onChange={onChange}
-            minLength={1} required
+            required
           />
+          {note.tag.length > 0 && note.tag.length < 2 && (
+            <small className="text-danger">Tag must be at least 2 characters</small>
+          )}
         </div>
 
-        <button disabled={note.title.length<2 || note.description.length<2 || note.tag.length<2} type="submit" className="btn btn-primary" onClick={handleClick}>
+        {/* Button */}
+        <button
+          disabled={
+            note.title.length < 4 ||
+            note.description.length < 5 ||
+            note.tag.length < 2
+          }
+          type="submit"
+          className="btn btn-primary"
+          onClick={handleClick}
+        >
           Add Note
         </button>
       </form>

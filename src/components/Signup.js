@@ -25,13 +25,16 @@ const Signup = (props) => {
     }
 
     try {
-      const response = await fetch("http://localhost:5000/api/auth/createuser", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name, email, password }),
-      });
+      const response = await fetch(
+        "REACT_APP_API_BASE_URL/api/auth/createuser",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ name, email, password }),
+        }
+      );
 
       const json = await response.json();
       console.log(json);
@@ -42,7 +45,10 @@ const Signup = (props) => {
         props.showAlert("Account created successfully", "success");
         navigate("/");
       } else {
-        props.showAlert(json.error || "Invalid details, please try again", "danger");
+        props.showAlert(
+          json.error || "Invalid details, please try again",
+          "danger"
+        );
       }
     } catch (error) {
       console.error("Error:", error);
@@ -54,7 +60,6 @@ const Signup = (props) => {
     <div className="container">
       <h2 className="my-3">Create an account to use iNotebook</h2>
       <form onSubmit={handleSubmit}>
-
         <div className="mb-3">
           <label htmlFor="name" className="form-label">
             Name

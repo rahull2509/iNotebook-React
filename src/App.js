@@ -5,7 +5,7 @@ import Alert from "./components/Alert";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
 import About from "./components/About";
-import ProtectedRoute from "./components/ProtectedRoute";  
+import ProtectedRoute from "./components/ProtectedRoute";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import NoteState from "./context/notes/NoteState";
 import { useState } from "react";
@@ -31,7 +31,6 @@ function App() {
           <Alert alert={alert} />
           <div className="container">
             <Routes>
-            
               <Route
                 path="/"
                 element={

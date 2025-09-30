@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { Schema } = mongoose;   // Schema import kiya
+const { Schema } = mongoose;
 
 const UserSchema = new Schema({
   name: {
@@ -9,7 +9,7 @@ const UserSchema = new Schema({
   email: {
     type: String,
     required: true,
-    unique: true,   // email unique hoga
+    unique: true,
   },
   password: {
     type: String,
@@ -21,5 +21,5 @@ const UserSchema = new Schema({
   },
 });
 
-const User =mongoose.model("user", UserSchema);
+const User = mongoose.model("user", UserSchema);
 module.exports = User;

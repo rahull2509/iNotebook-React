@@ -2,7 +2,7 @@ import NoteContext from "./noteContext";
 import { useState } from "react";
 
 const NoteState = (props) => {
-  const host = "http://localhost:5000";
+ const host = process.env.REACT_APP_API_BASE_URL;
   const notesInitial = [];
   const [notes, setNotes] = useState(notesInitial);
 
@@ -17,13 +17,21 @@ const NoteState = (props) => {
       });
 
       const json = await response.json();
-      setNotes(json);
+      console.log("Fetched Notes:", json);
+
+      if (Array.isArray(json)) {
+        setNotes(json);
+      } else if (json && Array.isArray(json.notes)) {
+        setNotes(json.notes);
+      } else {
+        setNotes([]);
+      }
     } catch (error) {
       console.error("Error fetching notes:", error.message);
+      setNotes([]);
     }
   };
 
-  
   const addNote = async (title, description, tag) => {
     try {
       const response = await fetch(`${host}/api/notes/addnote`, {
@@ -36,13 +44,12 @@ const NoteState = (props) => {
       });
 
       const note = await response.json();
-      setNotes(notes.concat(note)); 
+      setNotes(notes.concat(note));
     } catch (error) {
       console.error("Error adding note:", error.message);
     }
   };
 
-  
   const deleteNote = async (id) => {
     try {
       await fetch(`${host}/api/notes/deletenote/${id}`, {
@@ -53,14 +60,12 @@ const NoteState = (props) => {
         },
       });
 
-      
       setNotes(notes.filter((note) => note._id !== id));
     } catch (error) {
       console.error("Error deleting note:", error.message);
     }
   };
 
-  
   const editNote = async (id, title, description, tag) => {
     try {
       const response = await fetch(`${host}/api/notes/updatenote/${id}`, {
@@ -72,9 +77,8 @@ const NoteState = (props) => {
         body: JSON.stringify({ title, description, tag }),
       });
 
-      await response.json(); 
+      await response.json();
 
-     
       setNotes(
         notes.map((note) =>
           note._id === id ? { ...note, title, description, tag } : note

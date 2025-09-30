@@ -1,0 +1,14 @@
+# Ignore backend (we'll deploy this on Render separately)
+backend/
+
+# Ignore local env files
+.env
+.env.local
+
+# Ignore documentation & extras
+README.md
+LICENSE
+
+# Ignore lock files if not needed
+package-lock.json
+yarn.lock

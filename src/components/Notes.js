@@ -17,12 +17,10 @@ export default function Notes(props) {
     etag: "",
   });
 
-
   useEffect(() => {
     getNotes();
     // eslint-disable-next-line
   }, []);
-
 
   const updateNote = (currentNote) => {
     ref.current.click();
@@ -43,7 +41,7 @@ export default function Notes(props) {
   const handleClick = (e) => {
     e.preventDefault();
     editNote(note.id, note.etitle, note.edescription, note.etag);
-    refClose.current.click(); 
+    refClose.current.click();
     props.showAlert("Note updated successfully", "success");
   };
 
@@ -107,7 +105,7 @@ export default function Notes(props) {
                     name="edescription"
                     value={note.edescription}
                     onChange={onChange}
-                    minLength={5}
+                    minLength={4}
                     required
                   />
                 </div>
@@ -140,9 +138,9 @@ export default function Notes(props) {
               </button>
               <button
                 disabled={
-                  note.etitle.length < 4 ||
-                  note.edescription.length < 5 ||
-                  note.etag.length < 1
+                  (note.etitle?.length || 0) < 4 ||
+                  (note.edescription?.length || 0) < 4 ||
+                  (note.etag?.length || 0) < 1
                 }
                 type="button"
                 className="btn btn-primary"
@@ -154,15 +152,20 @@ export default function Notes(props) {
           </div>
         </div>
       </div>
-
       <div className="row my-3">
         <h2>Your Notes</h2>
-        {notes?.length === 0 && "No Notes to display"}
-        {notes?.map((note) => {
-          return (
-            <Noteitem key={note._id} updateNote={updateNote} note={note} />
-          );
-        })}
+        {(!notes || notes.length === 0) && "No Notes to display"}
+        {Array.isArray(notes) &&
+          notes.map((note) => {
+            return (
+              <Noteitem
+                key={note._id}
+                updateNote={updateNote}
+                note={note}
+                showAlert={props.showAlert}
+              />
+            );
+          })}
       </div>
     </>
   );
