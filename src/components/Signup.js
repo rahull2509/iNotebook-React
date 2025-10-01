@@ -26,7 +26,7 @@ const Signup = (props) => {
 
     try {
       const response = await fetch(
-        "REACT_APP_API_BASE_URL/api/auth/createuser",
+        `${process.env.REACT_APP_API_BASE_URL}/api/auth/createuser`,
         {
           method: "POST",
           headers: {
